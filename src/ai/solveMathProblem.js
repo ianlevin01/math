@@ -35,6 +35,9 @@ La respuesta DEBE tener EXACTAMENTE esta estructura:
 }
 
 REGLAS IMPORTANTES:
+PRIMORDIAL Y LA MAS IMPORTANTE:El JSON debe ser válido según JSON estándar.
+No usar expresiones matemáticas como valores.
+Todas las fracciones deben evaluarse a números decimales.
 
 1) "answerText" debe contener una explicación breve y clara del razonamiento matemático.
 
@@ -82,10 +85,9 @@ export async function solveMathProblem(problem) {
     });
 
     const rawContent = completion.choices[0].message.content;
-
     // 🔐 Parseo estricto: si no es JSON, falla
     const parsedResponse = JSON.parse(rawContent);
-
+    console.log(parsedResponse)
     return parsedResponse;
 
   } catch (error) {
