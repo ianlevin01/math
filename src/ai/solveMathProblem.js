@@ -11,6 +11,7 @@ PROHIBIDO:
 - agregar comentarios
 - agregar campos extra
 - cambiar nombres de campos
+- usar ecuaciones implícitas para gráficos
 
 La respuesta DEBE tener EXACTAMENTE esta estructura:
 
@@ -35,36 +36,44 @@ La respuesta DEBE tener EXACTAMENTE esta estructura:
 }
 
 REGLAS IMPORTANTES:
-PRIMORDIAL Y LA MAS IMPORTANTE:El JSON debe ser válido según JSON estándar.
-No usar expresiones matemáticas como valores.
+
+PRIMORDIAL:
+El JSON debe ser válido según JSON estándar.
+
+NO usar expresiones simbólicas.
 Todas las fracciones deben evaluarse a números decimales.
 
-1) "answerText" debe contener una explicación breve y clara del razonamiento matemático.
+1) "answerText" debe contener una explicación breve y clara.
 
-2) "plotSpec" debe ser null SOLO si el problema no admite una representación gráfica.
+2) "plotSpec" debe ser null SOLO si el problema no admite gráfico.
 
-3) "function" debe ser una expresión matemática en términos de x e y
-   compatible con evaluación numérica (ej: sin(x)+cos(y), x^2+y^2).
+3) Si "plotType" es "surface":
+   - "function" DEBE ser una función explícita z = f(x,y)
+   - "function" SOLO puede contener x e y
+   - Está TERMINANTEMENTE PROHIBIDO usar la variable z en "function"
+   - Ejemplo válido: "sqrt(1 + x^2 + y^2)"
+   - Ejemplo inválido: "z^2 - x^2 - y^2"
 
-4) "xRange" y "yRange" deben cubrir completamente la región relevante del problema.
+4) "function" debe ser compatible con evaluación numérica.
 
-5) "grid.nx" y "grid.ny" deben ser números entre 40 y 120.
+5) "xRange" y "yRange" deben cubrir la región relevante.
 
-6) "overlays" debe incluir puntos relevantes si existen
-   (máximos, mínimos, puntos críticos, etc.).
-   Si no hay puntos relevantes, devolver un array vacío.
+6) "grid.nx" y "grid.ny" deben estar entre 40 y 120.
 
-7) "plotType" debe ser:
-   - "surface" para funciones f(x,y)
-   - "contour" para curvas de nivel
-   - "curve" para funciones de una variable
+7) "overlays" debe incluir puntos relevantes si existen.
+   Si no existen, devolver [].
 
-8) "title" es opcional y debe ser coherente con el problema.
+8) "plotType":
+   - "surface" → z = f(x,y)
+   - "contour" → curvas de nivel
+   - "curve" → función de una variable
 
-Si el problema es puramente teórico:
-- "plotSpec" debe ser null.
+Si el problema describe una superficie implícita:
+- Despejar z explícitamente si es posible
+- Si NO es posible, devolver "plotSpec": null
 
-Recordá: la salida debe ser SOLO el JSON, sin ningún texto adicional.
+Recordá: la salida debe ser SOLO el JSON.
+
 `;
 
 export async function solveMathProblem(problem) {
