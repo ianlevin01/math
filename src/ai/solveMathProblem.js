@@ -19,7 +19,12 @@ La respuesta DEBE tener EXACTAMENTE esta estructura:
   "answerText": string,
   "plotSpec": {
     "plotType": "surface" | "contour" | "curve" | null,
-    "function": string | null,
+    "functions": [
+      {
+        "expression": string,
+        "label": string
+      }
+    ] | null,
     "xRange": [number, number] | null,
     "yRange": [number, number] | null,
     "grid": { "nx": number, "ny": number } | null,
@@ -40,39 +45,47 @@ REGLAS IMPORTANTES:
 PRIMORDIAL:
 El JSON debe ser válido según JSON estándar.
 
-NO usar expresiones simbólicas.
+No usar expresiones simbólicas.
 Todas las fracciones deben evaluarse a números decimales.
 
-1) "answerText" debe contener una explicación breve y clara.
+1) "answerText" debe contener una explicación breve y clara del razonamiento matemático.
 
-2) "plotSpec" debe ser null SOLO si el problema no admite gráfico.
+2) "plotSpec" debe ser null SOLO si el problema no admite representación gráfica.
 
-3) Si "plotType" es "surface":
-   - "function" DEBE ser una función explícita z = f(x,y)
-   - "function" SOLO puede contener x e y
-   - Está TERMINANTEMENTE PROHIBIDO usar la variable z en "function"
+3) "functions" debe contener TODAS las funciones necesarias para representar el problema.
+   Nunca colapsar varias funciones en una sola.
+
+4) Para "plotType" = "curve":
+   - Cada "expression" debe depender SOLO de x
+   - Ejemplos válidos: "2*x+1", "sin(x)"
+
+5) Para "plotType" = "surface":
+   - Cada "expression" DEBE ser z = f(x,y)
+   - Las expresiones SOLO pueden contener x e y
+   - Está TERMINANTEMENTE PROHIBIDO usar la variable z
    - Ejemplo válido: "sqrt(1 + x^2 + y^2)"
    - Ejemplo inválido: "z^2 - x^2 - y^2"
 
-4) "function" debe ser compatible con evaluación numérica.
+6) Para "plotType" = "contour":
+   - Cada "expression" debe representar f(x,y)
 
-5) "xRange" y "yRange" deben cubrir la región relevante.
+7) "xRange" y "yRange" deben cubrir completamente la región relevante del problema.
 
-6) "grid.nx" y "grid.ny" deben estar entre 40 y 120.
+8) "grid.nx" y "grid.ny" deben estar entre 40 y 120 cuando se use surface o contour.
+   Para curve, "grid" debe ser null.
 
-7) "overlays" debe incluir puntos relevantes si existen.
+9) "overlays" debe incluir puntos relevantes si existen
+   (intersecciones, máximos, mínimos, etc.).
    Si no existen, devolver [].
 
-8) "plotType":
-   - "surface" → z = f(x,y)
-   - "contour" → curvas de nivel
-   - "curve" → función de una variable
+10) "title" debe ser coherente con el problema planteado.
 
-Si el problema describe una superficie implícita:
-- Despejar z explícitamente si es posible
-- Si NO es posible, devolver "plotSpec": null
+Si el problema es puramente teórico:
+- "plotSpec" debe ser null.
 
-Recordá: la salida debe ser SOLO el JSON.
+Recordá:
+La salida debe ser SOLO el JSON, sin ningún texto adicional.
+
 
 `;
 
