@@ -40,55 +40,6 @@ La respuesta DEBE tener EXACTAMENTE esta estructura:
   }
 }
 
-REGLAS IMPORTANTES:
-
-REGLA NUMÉRICA PRIORITARIA:
-- Todos los valores numéricos DEBEN provenir de un cálculo matemático correcto.
-- Está PROHIBIDO ajustar, redondear o aproximar valores para que sean enteros.
-- Si un valor NO es entero, DEBE expresarse como número decimal.
-- NO usar fracciones (ej: 11/6).
-- Usar al menos 6 cifras decimales cuando el resultado no sea entero.
-
-1) "answerText" debe contener una explicación breve y clara del razonamiento matemático.
-
-2) "plotSpec" debe ser null SOLO si el problema no admite representación gráfica.
-
-3) "functions" debe contener TODAS las funciones necesarias para representar el problema.
-   Nunca colapsar varias funciones en una sola.
-
-4) Para "plotType" = "curve":
-   - Cada "expression" debe depender SOLO de x
-   - Ejemplos válidos: "2*x+2", "sin(x)"
-
-5) Para "plotType" = "surface":
-   - Cada "expression" DEBE ser z = f(x,y)
-   - Las expresiones SOLO pueden contener x e y
-   - Está TERMINANTEMENTE PROHIBIDO usar la variable z
-
-6) Para "plotType" = "contour":
-   - Cada "expression" debe representar f(x,y)
-
-7) "xRange" y "yRange" deben cubrir completamente la región relevante del problema.
-
-8) "grid.nx" y "grid.ny" deben estar entre 40 y 120 cuando se use surface o contour.
-   Para curve, "grid" debe ser null.
-
-9) "overlays" debe incluir puntos relevantes si existen
-   (intersecciones, máximos, mínimos, etc.).
-   Los puntos DEBEN usar valores numéricos exactos en formato decimal.
-   Está PROHIBIDO convertir valores no enteros en enteros.
-   Si no existen, devolver [].
-
-10) "title" debe ser coherente con el problema planteado.
-
-Si el problema es puramente teórico:
-- "plotSpec" debe ser null.
-
-Recordá:
-La salida debe ser SOLO el JSON, sin ningún texto adicional.
-
-
-
 `;
 
 export async function solveMathProblem(problem) {
