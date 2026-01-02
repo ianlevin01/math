@@ -40,6 +40,7 @@ La respuesta DEBE tener EXACTAMENTE esta estructura:
 }
 
 REGLAS IMPORTANTES:
+PRIMORDIAL: al final de generar la respuesta pasar todas las fracciones a numeros con coma antes de devolver el json
 
 1) "answerText" debe contener una explicación breve y clara del razonamiento matemático.
 
