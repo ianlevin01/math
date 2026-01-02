@@ -103,7 +103,7 @@ export async function solveMathProblem(problem) {
     ];
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       temperature: 0,
       messages: messagesForAI
     });
