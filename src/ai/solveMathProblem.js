@@ -47,6 +47,7 @@ El JSON debe ser válido según JSON estándar.
 
 No usar expresiones simbólicas.
 Todas las fracciones deben evaluarse a números decimales.
+Todos los numeros necesarios tienen que ser con coma, no pueden ser fracciones para no romper el esquema JSON
 
 1) "answerText" debe contener una explicación breve y clara del razonamiento matemático.
 
