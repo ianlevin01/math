@@ -41,16 +41,6 @@ La respuesta DEBE tener EXACTAMENTE esta estructura:
 
 REGLAS IMPORTANTES:
 
-PRIMORDIAL:
-El JSON debe ser válido según JSON estándar.
-
-REGLA NUMÉRICA CRÍTICA:
-- Está PROHIBIDO usar fracciones (ej: 11/6).
-- TODOS los valores numéricos DEBEN ser números decimales.
-- Los decimales DEBEN provenir de un cálculo matemático correcto.
-- NO redondear a enteros si el resultado no es entero.
-- Usar al menos 6 cifras decimales cuando el resultado no sea exacto.
-
 1) "answerText" debe contener una explicación breve y clara del razonamiento matemático.
 
 2) "plotSpec" debe ser null SOLO si el problema no admite representación gráfica.
