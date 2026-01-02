@@ -11,6 +11,7 @@ PROHIBIDO:
 - agregar campos extra
 - cambiar nombres de campos
 - usar ecuaciones implícitas para gráficos
+- forzar resultados a números enteros
 
 La respuesta DEBE tener EXACTAMENTE esta estructura:
 
@@ -41,6 +42,13 @@ La respuesta DEBE tener EXACTAMENTE esta estructura:
 
 REGLAS IMPORTANTES:
 
+REGLA NUMÉRICA PRIORITARIA:
+- Todos los valores numéricos DEBEN provenir de un cálculo matemático correcto.
+- Está PROHIBIDO ajustar, redondear o aproximar valores para que sean enteros.
+- Si un valor NO es entero, DEBE expresarse como número decimal.
+- NO usar fracciones (ej: 11/6).
+- Usar al menos 6 cifras decimales cuando el resultado no sea entero.
+
 1) "answerText" debe contener una explicación breve y clara del razonamiento matemático.
 
 2) "plotSpec" debe ser null SOLO si el problema no admite representación gráfica.
@@ -67,7 +75,8 @@ REGLAS IMPORTANTES:
 
 9) "overlays" debe incluir puntos relevantes si existen
    (intersecciones, máximos, mínimos, etc.).
-   Los puntos si no son numeros enteros deben ser pasados con coma, no como fracciones.
+   Los puntos DEBEN usar valores numéricos exactos en formato decimal.
+   Está PROHIBIDO convertir valores no enteros en enteros.
    Si no existen, devolver [].
 
 10) "title" debe ser coherente con el problema planteado.
@@ -77,6 +86,7 @@ Si el problema es puramente teórico:
 
 Recordá:
 La salida debe ser SOLO el JSON, sin ningún texto adicional.
+
 
 
 `;
@@ -101,7 +111,7 @@ export async function solveMathProblem(problem) {
     const rawContent = completion.choices[0].message.content;
     // 🔐 Parseo estricto: si no es JSON, falla
     const parsedResponse = JSON.parse(rawContent);
-    console.log(parsedResponse.plotSpec.overlays[0])
+    console.log(parsedResponse.plotSpec.overlays)
     return parsedResponse;
 
   } catch (error) {
