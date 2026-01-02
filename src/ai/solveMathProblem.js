@@ -54,7 +54,7 @@ export async function solveMathProblem(problem) {
     ];
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       temperature: 0,
       messages: messagesForAI
     });
@@ -62,7 +62,7 @@ export async function solveMathProblem(problem) {
     const rawContent = completion.choices[0].message.content;
     // 🔐 Parseo estricto: si no es JSON, falla
     const parsedResponse = JSON.parse(rawContent);
-    console.log(parsedResponse.plotSpec.overlays)
+    console.log(parsedResponse)
     return parsedResponse;
 
   } catch (error) {
