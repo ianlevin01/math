@@ -67,7 +67,7 @@ REGLAS IMPORTANTES:
 
 9) "overlays" debe incluir puntos relevantes si existen
    (intersecciones, máximos, mínimos, etc.).
-   Los puntos DEBEN usar valores decimales exactos.
+   Los puntos si no son numeros enteros deben ser pasados con coma, no como fracciones.
    Si no existen, devolver [].
 
 10) "title" debe ser coherente con el problema planteado.
