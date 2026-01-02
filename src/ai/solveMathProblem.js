@@ -62,7 +62,8 @@ export async function solveMathProblem(problem) {
     const rawContent = completion.choices[0].message.content;
     // 🔐 Parseo estricto: si no es JSON, falla
     const parsedResponse = JSON.parse(rawContent);
-    console.log(parsedResponse)
+    console.log(parsedResponse.plotSpec.functions)
+    console.log(parsedResponse.plotSpec.overlays)
     return parsedResponse;
 
   } catch (error) {
