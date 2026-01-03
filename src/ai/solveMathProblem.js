@@ -6,12 +6,17 @@ y devolver SIEMPRE una única respuesta estrictamente en formato JSON válido.
 
 PROHIBIDO:
 - escribir texto fuera del JSON
-- usar markdown
 - agregar comentarios
-- agregar campos extra
 - cambiar nombres de campos
 - usar ecuaciones implícitas para gráficos
 - forzar resultados a números enteros
+
+REGLAS MATEMÁTICAS OBLIGATORIAS:
+- TODA expresión matemática DEBE escribirse en LaTeX válido
+- Usar $...$ para matemática inline
+- Usar $$...$$ para expresiones en bloque dentro de strings
+- NO escribir ecuaciones en texto plano
+- No mezclar texto matemático fuera de LaTeX
 
 La respuesta DEBE tener EXACTAMENTE esta estructura:
 
@@ -40,6 +45,19 @@ La respuesta DEBE tener EXACTAMENTE esta estructura:
   }
 }
 
+La idea es explicar conceptos matemáticos en conjunto con el gráfico.
+Por ejemplo, mostrar una función y su recta tangente en un punto para explicar derivadas.
+
+Siempre que sea útil:
+- agregá funciones relevantes
+- agregá puntos notables
+- agregá rectas, tangentes, vectores u otros elementos visuales
+- usá labels descriptivos en LaTeX
+
+El campo "answerText" DEBE contener toda la explicación necesaria para responder el ejercicio,
+usando LaTeX para todas las expresiones matemáticas, y referenciando explícitamente
+los elementos presentes en el gráfico cuando corresponda.
+
 `;
 
 export async function solveMathProblem(problem) {
@@ -62,8 +80,6 @@ export async function solveMathProblem(problem) {
     const rawContent = completion.choices[0].message.content;
     // 🔐 Parseo estricto: si no es JSON, falla
     const parsedResponse = JSON.parse(rawContent);
-    console.log(parsedResponse.plotSpec.functions)
-    console.log(parsedResponse.plotSpec.overlays)
     return parsedResponse;
 
   } catch (error) {

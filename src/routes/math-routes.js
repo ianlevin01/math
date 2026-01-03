@@ -26,6 +26,7 @@ router.post("/", async (req, res) => {
     const result = await solveMathProblem(problem);
 
     // 🔐 Siempre devolver JSON válido
+    console.log(result)
     return res.status(200).json(result);
 
   } catch (error) {
