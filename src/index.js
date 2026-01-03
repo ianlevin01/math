@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mathRoutes from "./routes/math-routes.js";
 import authRoutes from "./routes/auth-routes.js";
+import webhookRoutes from "./routes/webhook-routes.js";
 
 
 dotenv.config();
@@ -22,6 +23,7 @@ app.get("/health", (_, res) => {
 // Rutas
 app.use("/math", mathRoutes);
 app.use("/auth", authRoutes);
+app.use("/webhook", webhookRoutes);
 
 // Server
 app.listen(PORT, "0.0.0.0", () => {

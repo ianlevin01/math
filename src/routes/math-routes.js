@@ -1,39 +1,32 @@
 import { Router } from "express";
+import multer from "multer";
 import { solveMathProblem } from "../ai/solveMathProblem.js";
 
 const router = Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 /**
- * POST /solve
- * Body:
- * {
- *   "problem": "Maximizar f(x,y)=x^2+y^2 en el disco x^2+y^2 <= 1"
- * }
- *
- * Response:
- * JSON estructurado para explicación + Plotly
+ * POST /math
+ * multipart/form-data
+ * - problem: string
+ * - image?: file
  */
-router.post("/", async (req, res) => {
+router.post("/", upload.single("image"), async (req, res) => {
   try {
     const { problem } = req.body;
+    const imageFile = req.file || null;
 
     if (!problem || typeof problem !== "string") {
-      return res.status(400).json({
-        error: "INVALID_PROBLEM"
-      });
+      return res.status(400).json({ error: "INVALID_PROBLEM" });
     }
 
-    const result = await solveMathProblem(problem);
-
-    // 🔐 Siempre devolver JSON válido
-    console.log(result)
+    const result = await solveMathProblem(problem, imageFile);
+    console.log(result.plotSpec)
     return res.status(200).json(result);
 
   } catch (error) {
-    console.error("Error en /solve:", error);
-    return res.status(500).json({
-      error: "SOLVER_ERROR"
-    });
+    console.error("Error en /math:", error);
+    return res.status(500).json({ error: "SOLVER_ERROR" });
   }
 });
 

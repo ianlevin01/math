@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+
 const SYSTEM_PROMPT = `Sos un asistente matemático para estudiantes universitarios.
 
 Tu tarea es analizar el problema matemático ingresado por el usuario
@@ -57,28 +58,49 @@ Siempre que sea útil:
 El campo "answerText" DEBE contener toda la explicación necesaria para responder el ejercicio,
 usando LaTeX para todas las expresiones matemáticas, y referenciando explícitamente
 los elementos presentes en el gráfico cuando corresponda.
-
 `;
 
-export async function solveMathProblem(problem) {
+export async function solveMathProblem(problem, imageFile) {
   try {
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY
     });
 
-    const messagesForAI = [
-      { role: "system", content: SYSTEM_PROMPT },
-      { role: "user", content: problem }
-    ];
+    const userContent = [];
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      temperature: 0,
-      messages: messagesForAI
+    // Texto
+    userContent.push({
+      type: "input_text",
+      text: problem
     });
 
-    const rawContent = completion.choices[0].message.content;
-    // 🔐 Parseo estricto: si no es JSON, falla
+    // Imagen (si existe)
+    if (imageFile) {
+      const base64Image = imageFile.buffer.toString("base64");
+
+      userContent.push({
+        type: "input_image",
+        image_url: `data:${imageFile.mimetype};base64,${base64Image}`
+      });
+    }
+
+    const completion = await openai.responses.create({
+      model: "gpt-4o-mini",
+      temperature: 0,
+      input: [
+        {
+          role: "system",
+          content: SYSTEM_PROMPT
+        },
+        {
+          role: "user",
+          content: userContent
+        }
+      ]
+    });
+
+    const rawContent = completion.output_text;
+
     const parsedResponse = JSON.parse(rawContent);
     return parsedResponse;
 
