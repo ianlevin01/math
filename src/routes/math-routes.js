@@ -21,7 +21,7 @@ router.post("/", upload.single("image"), async (req, res) => {
     }
 
     const result = await solveMathProblem(problem, imageFile);
-    console.log(result.plotSpec)
+    console.log(result)
     return res.status(200).json(result);
 
   } catch (error) {

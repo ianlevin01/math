@@ -18,6 +18,7 @@ REGLAS MATEMÁTICAS OBLIGATORIAS:
 - Usar $$...$$ para expresiones en bloque dentro de strings
 - NO escribir ecuaciones en texto plano
 - No mezclar texto matemático fuera de LaTeX
+- **Importante**: Para asegurar que la respuesta sea un JSON válido, TODAS las expresiones de LaTeX que contengan barras invertidas (\\) deben ser doblemente escapadas. Es decir, usa \\\\ en lugar de \\ para evitar errores de parsing en JSON.
 
 La respuesta DEBE tener EXACTAMENTE esta estructura:
 
@@ -59,6 +60,8 @@ El campo "answerText" DEBE contener toda la explicación necesaria para responde
 usando LaTeX para todas las expresiones matemáticas, y referenciando explícitamente
 los elementos presentes en el gráfico cuando corresponda.
 `;
+
+
 
 export async function solveMathProblem(problem, imageFile) {
   try {
