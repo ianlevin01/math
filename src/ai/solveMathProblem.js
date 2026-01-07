@@ -1,13 +1,19 @@
+import { parse } from "dotenv";
+import { raw } from "express";
 import OpenAI from "openai";
 
 const SYSTEM_PROMPT = `Sos un asistente matemático para estudiantes universitarios.
 
 Tu tarea es analizar el problema matemático ingresado por el usuario
-y devolver SIEMPRE una única respuesta estrictamente en formato JSON válido.
+y devolver SIEMPRE una única respuesta estrictamente en formato JSON válido,
+parseable directamente con JSON.parse sin errores.
 
-PROHIBIDO:
+PROHIBIDO ABSOLUTO:
 - escribir texto fuera del JSON
 - agregar comentarios
+- usar comas finales
+- usar caracteres de control no escapados
+- usar saltos de línea fuera de strings
 - cambiar nombres de campos
 - usar ecuaciones implícitas para gráficos
 - forzar resultados a números enteros
@@ -18,9 +24,15 @@ REGLAS MATEMÁTICAS OBLIGATORIAS:
 - Usar $$...$$ para expresiones en bloque dentro de strings
 - NO escribir ecuaciones en texto plano
 - No mezclar texto matemático fuera de LaTeX
-- **Importante**: Para asegurar que la respuesta sea un JSON válido, TODAS las expresiones de LaTeX que contengan barras invertidas (\\) deben ser doblemente escapadas. Es decir, usa \\\\ en lugar de \\ para evitar errores de parsing en JSON.
 
-La respuesta DEBE tener EXACTAMENTE esta estructura:
+REGLAS CRÍTICAS DE JSON + LaTeX (OBLIGATORIAS):
+- TODA barra invertida \\ dentro de strings DEBE escribirse como \\\\
+- Nunca escribir \\, \frac, \cdot, \sqrt, \int, \sum, etc. sin doble escape
+- Todo LaTeX debe estar contenido dentro de strings JSON
+- No usar caracteres especiales fuera de strings
+- No usar backticks
+
+ESTRUCTURA OBLIGATORIA (NO MODIFICAR):
 
 {
   "answerText": string,
@@ -42,23 +54,20 @@ La respuesta DEBE tener EXACTAMENTE esta estructura:
         "y": number,
         "label": string
       }
-    ] | [],
+    ],
     "title": string | null
   }
 }
 
-La idea es explicar conceptos matemáticos en conjunto con el gráfico.
-Por ejemplo, mostrar una función y su recta tangente en un punto para explicar derivadas.
+REGLAS DE CONTENIDO:
+- El campo "answerText" debe contener TODA la explicación matemática
+- Todas las expresiones matemáticas deben estar en LaTeX correctamente escapado
+- Referenciar explícitamente en el texto los elementos del gráfico cuando existan
+- Si no es útil un gráfico, usar plotType: null y el resto de los campos en null o []
 
-Siempre que sea útil:
-- agregá funciones relevantes
-- agregá puntos notables
-- agregá rectas, tangentes, vectores u otros elementos visuales
-- usá labels descriptivos en LaTeX
+REGLA FINAL:
+Antes de responder, verificá internamente que el JSON sea válido y que JSON.parse pueda ejecutarse sin errores.
 
-El campo "answerText" DEBE contener toda la explicación necesaria para responder el ejercicio,
-usando LaTeX para todas las expresiones matemáticas, y referenciando explícitamente
-los elementos presentes en el gráfico cuando corresponda.
 `;
 
 
@@ -103,7 +112,7 @@ export async function solveMathProblem(problem, imageFile) {
     });
 
     const rawContent = completion.output_text;
-
+    console.log(rawContent)
     const parsedResponse = JSON.parse(rawContent);
     return parsedResponse;
 
